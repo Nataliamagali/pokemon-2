@@ -1,23 +1,27 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import axios from 'axios';
 import './App.css';
 
 function App() {
+  const [listaPokemon, setListaPokemon] = useState([]);
+
+  const buscarPokemon = async () => {
+    try {
+      const respuesta = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=807');
+      setListaPokemon(respuesta.data.results);
+    } catch (error) {
+      console.error('Error al buscar los Pokémon:', error);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={buscarPokemon}>Buscar Pokémon</button>
+      <ul>
+        {listaPokemon.map((pokemon, indice) => (
+          <li key={indice}>{`• ${pokemon.name}`}</li>
+        ))}
+      </ul>
     </div>
   );
 }
